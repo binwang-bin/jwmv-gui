@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Library/exe assembly name; pack.ps1 / release publish can override to jwmv.exe via -p:AssemblyName=jwmv -->
+    <AssemblyName>Jwmv.Cli</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Jwmv.Cli</RootNamespace>
+    <Version>0.1.0</Version>
+    <JwmvReleaseRepository Condition="'$(JwmvReleaseRepository)' == ''"></JwmvReleaseRepository>
+
+    <!-- dotnet tool packaging -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>jwmv</ToolCommandName>
+    <PackageId>jwmv</PackageId>
+    <Authors>Sergio Triana Escobedo</Authors>
+    <Description>A fast, lightweight CLI tool to install, manage, and switch between multiple Java (JDK) versions on Windows.</Description>
+    <PackageTags>java;jdk;version-manager;sdkman;windows;cli</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/stescobedo92/jwmv</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Jwmv.Core\Jwmv.Core.csproj" />
+    <ProjectReference Include="..\Jwmv.Infrastructure\Jwmv.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console.Cli" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Condition="Exists('..\..\icon.png')" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(JwmvReleaseRepository)' != ''">
+    <AssemblyMetadata Include="JwmvReleaseRepository" Value="$(JwmvReleaseRepository)" />
+  </ItemGroup>
+
+</Project>

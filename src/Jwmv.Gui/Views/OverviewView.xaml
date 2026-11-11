@@ -1,0 +1,82 @@
+<UserControl x:Class="Jwmv.Gui.Views.OverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:Jwmv.Gui.Localization">
+  <DockPanel Style="{StaticResource PageRootStyle}">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+      <TextBlock Text="{loc:Loc Overview_Title}" Style="{StaticResource PageTitleStyle}" />
+      <Button Content="{loc:Loc Common_Refresh}"
+              Command="{Binding RefreshCommand}"
+              HorizontalAlignment="Right"
+              Margin="0" />
+    </DockPanel>
+
+    <Border DockPanel.Dock="Top"
+            Style="{StaticResource ErrorBannerStyle}"
+            Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVis}}">
+      <DockPanel>
+        <Button DockPanel.Dock="Right"
+                Content="{loc:Loc Common_Retry}"
+                Command="{Binding RefreshCommand}"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center" />
+        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorBannerTextStyle}" />
+      </DockPanel>
+    </Border>
+    <Border DockPanel.Dock="Top"
+            Style="{StaticResource InfoBannerStyle}"
+            Visibility="{Binding InfoMessage, Converter={StaticResource StringToVis}}">
+      <TextBlock Text="{Binding InfoMessage}" Style="{StaticResource InfoBannerTextStyle}" />
+    </Border>
+
+    <Grid IsEnabled="{Binding IsIdle}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="16" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <DockPanel Grid.Column="0">
+        <TextBlock DockPanel.Dock="Top"
+                   Text="{loc:Loc Overview_CurrentResolution}"
+                   Style="{StaticResource SectionTitleStyle}" />
+        <Grid>
+          <DataGrid ItemsSource="{Binding CurrentSelections}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{loc:Loc Col_Candidate}" Binding="{Binding CandidateName}" Width="*" />
+              <DataGridTextColumn Header="{loc:Loc Col_Alias}" Binding="{Binding Alias}" Width="*" />
+              <DataGridTextColumn Header="{loc:Loc Col_Source}" Binding="{Binding Source}" Width="90" />
+              <DataGridTextColumn Header="{loc:Loc Col_Home}" Binding="{Binding HomeDirectory}" Width="2*">
+                <DataGridTextColumn.ElementStyle>
+                  <Style TargetType="TextBlock" BasedOn="{StaticResource PathCellTextStyle}" />
+                </DataGridTextColumn.ElementStyle>
+              </DataGridTextColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+          <TextBlock Text="{loc:Loc Empty_OverviewSelections}"
+                     Style="{StaticResource EmptyStateStyle}"
+                     Visibility="{Binding IsSelectionsEmpty, Converter={StaticResource BoolToVis}}" />
+        </Grid>
+      </DockPanel>
+
+      <DockPanel Grid.Column="2">
+        <TextBlock DockPanel.Dock="Top"
+                   Text="{loc:Loc Overview_Candidates}"
+                   Style="{StaticResource SectionTitleStyle}" />
+        <Grid>
+          <DataGrid ItemsSource="{Binding Candidates}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="{loc:Loc Col_Name}" Binding="{Binding Name}" Width="90" />
+              <DataGridTextColumn Header="{loc:Loc Col_Display}" Binding="{Binding DisplayName}" Width="*" />
+              <DataGridTextColumn Header="{loc:Loc Col_HomeVar}" Binding="{Binding HomeEnvironmentVariable}" Width="120" />
+              <DataGridTextColumn Header="{loc:Loc Col_Latest}" Binding="{Binding LatestVersion}" Width="120" />
+            </DataGrid.Columns>
+          </DataGrid>
+          <TextBlock Text="{loc:Loc Empty_OverviewCandidates}"
+                     Style="{StaticResource EmptyStateStyle}"
+                     Visibility="{Binding IsCandidatesEmpty, Converter={StaticResource BoolToVis}}" />
+        </Grid>
+      </DockPanel>
+    </Grid>
+  </DockPanel>
+</UserControl>

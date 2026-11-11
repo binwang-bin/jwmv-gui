@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>Jwmv.Gui</RootNamespace>
+    <!-- Dev/build name. pack.ps1 publishes as jwmv.exe (dual-mode GUI+CLI host). -->
+    <AssemblyName>jwmv-gui</AssemblyName>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\icon.ico</ApplicationIcon>
+    <Version>0.1.0</Version>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Jwmv.Cli\Jwmv.Cli.csproj" />
+    <ProjectReference Include="..\Jwmv.Core\Jwmv.Core.csproj" />
+    <ProjectReference Include="..\Jwmv.Infrastructure\Jwmv.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+
+</Project>

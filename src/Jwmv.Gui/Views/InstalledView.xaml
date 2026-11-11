@@ -1,0 +1,148 @@
+<UserControl x:Class="Jwmv.Gui.Views.InstalledView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:Jwmv.Gui.Localization">
+  <DockPanel Style="{StaticResource PageRootStyle}">
+    <!-- Title + list filter + refresh on one row -->
+    <Border DockPanel.Dock="Top" Style="{StaticResource CompactToolbarStyle}" Margin="0,0,0,8">
+      <DockPanel LastChildFill="False">
+        <TextBlock Text="{loc:Loc Installed_Title}"
+                   Style="{StaticResource PageTitleStyle}"
+                   VerticalAlignment="Center"
+                   Margin="0,0,16,0" />
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBlock Text="{loc:Loc Installed_FilterCandidate}" Style="{StaticResource InlineFieldLabelStyle}" />
+          <ComboBox Width="120"
+                    ItemsSource="{Binding CandidateFilterNames}"
+                    SelectedItem="{Binding CandidateFilter}"
+                    IsEnabled="{Binding IsIdle}"
+                    VerticalAlignment="Center" />
+        </StackPanel>
+        <Button DockPanel.Dock="Right"
+                Content="{loc:Loc Common_Refresh}"
+                Command="{Binding RefreshCommand}"
+                VerticalAlignment="Center"
+                Margin="0" />
+      </DockPanel>
+    </Border>
+
+    <Expander DockPanel.Dock="Top"
+              Header="{loc:Loc Installed_ImportSection}"
+              IsExpanded="{Binding IsImportExpanded}"
+              Margin="0,0,0,8">
+      <Border Style="{StaticResource CompactToolbarStyle}" Margin="0,6,0,0">
+        <DockPanel LastChildFill="False">
+          <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="{loc:Loc Installed_ImportAs}" Style="{StaticResource InlineFieldLabelStyle}" />
+            <ComboBox Width="120"
+                      Margin="0,0,12,0"
+                      ItemsSource="{Binding ImportCandidateNames}"
+                      SelectedItem="{Binding ImportCandidate}"
+                      IsEnabled="{Binding IsIdle}"
+                      VerticalAlignment="Center" />
+            <CheckBox Content="{loc:Loc Installed_ImportAll}"
+                      IsChecked="{Binding ImportAll}"
+                      IsEnabled="{Binding IsIdle}"
+                      VerticalAlignment="Center" />
+          </StackPanel>
+          <Button DockPanel.Dock="Right"
+                  Content="{loc:Loc Installed_Import}"
+                  Command="{Binding ImportLocalCommand}"
+                  Style="{StaticResource PrimaryButtonStyle}"
+                  VerticalAlignment="Center"
+                  Margin="0" />
+        </DockPanel>
+      </Border>
+    </Expander>
+
+    <Border DockPanel.Dock="Top"
+            Style="{StaticResource ErrorBannerStyle}"
+            Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVis}}">
+      <DockPanel>
+        <Button DockPanel.Dock="Right"
+                Content="{loc:Loc Common_Retry}"
+                Command="{Binding RefreshCommand}"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center" />
+        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorBannerTextStyle}" />
+      </DockPanel>
+    </Border>
+    <Border DockPanel.Dock="Top"
+            Style="{StaticResource InfoBannerStyle}"
+            Visibility="{Binding InfoMessage, Converter={StaticResource StringToVis}}">
+      <TextBlock Text="{Binding InfoMessage}" Style="{StaticResource InfoBannerTextStyle}" />
+    </Border>
+
+    <!-- Selection actions: single compact row -->
+    <Border DockPanel.Dock="Top" Style="{StaticResource CompactToolbarStyle}">
+      <DockPanel LastChildFill="False">
+        <TextBlock Text="{loc:Loc Installed_SelectionSection}"
+                   Style="{StaticResource InlineCaptionStyle}" />
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+          <Button Content="{loc:Loc Installed_CopyHome}" Command="{Binding CopyHomeCommand}" />
+          <Button Content="{loc:Loc Installed_ExportUse}" Command="{Binding ExportUseScriptCommand}" />
+          <Button Content="{loc:Loc Installed_SetDefault}"
+                  Command="{Binding SetDefaultCommand}"
+                  Style="{StaticResource PrimaryButtonStyle}" />
+          <Button Content="{loc:Loc Installed_Uninstall}"
+                  Command="{Binding UninstallCommand}"
+                  Style="{StaticResource DangerButtonStyle}"
+                  Margin="0" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <Expander DockPanel.Dock="Bottom"
+              Header="{loc:Loc Installed_UseScriptHeader}"
+              IsExpanded="{Binding IsUseScriptExpanded}"
+              Margin="0,8,0,0">
+      <TextBox Text="{Binding UseScript}"
+               IsReadOnly="True"
+               TextWrapping="Wrap"
+               AcceptsReturn="True"
+               VerticalScrollBarVisibility="Auto"
+               MinHeight="100"
+               FontFamily="Cascadia Mono, Consolas" />
+    </Expander>
+
+    <Grid>
+      <DataGrid ItemsSource="{Binding InstalledVersions}"
+                SelectedItem="{Binding SelectedInstalled}"
+                IsEnabled="{Binding IsIdle}">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="{loc:Loc Col_Candidate}" Binding="{Binding CandidateName}" Width="90" />
+          <DataGridTextColumn Header="{loc:Loc Col_Alias}" Binding="{Binding Alias}" Width="140" />
+          <DataGridTextColumn Header="{loc:Loc Col_Version}" Binding="{Binding VersionText}" Width="120" />
+          <DataGridTemplateColumn Header="{loc:Loc Col_Default}" Width="80">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <Border Background="{StaticResource AccentBrush}"
+                        CornerRadius="4"
+                        Padding="6,2"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding DefaultLabel, Converter={StaticResource StringToVis}}">
+                  <TextBlock Text="{Binding DefaultLabel}"
+                             Foreground="{StaticResource OnAccentBrush}"
+                             FontSize="11"
+                             FontWeight="SemiBold"
+                             TextWrapping="NoWrap" />
+                </Border>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+          <DataGridTextColumn Header="{loc:Loc Col_Display}" Binding="{Binding DisplayName}" Width="*" />
+          <DataGridTextColumn Header="{loc:Loc Col_Home}" Binding="{Binding HomeDirectory}" Width="2*">
+            <DataGridTextColumn.ElementStyle>
+              <Style TargetType="TextBlock" BasedOn="{StaticResource PathCellTextStyle}" />
+            </DataGridTextColumn.ElementStyle>
+          </DataGridTextColumn>
+          <DataGridTextColumn Header="{loc:Loc Col_InstalledUtc}" Binding="{Binding InstalledAtUtc}" Width="150" />
+        </DataGrid.Columns>
+      </DataGrid>
+      <TextBlock Text="{loc:Loc Empty_Installed}"
+                 Style="{StaticResource EmptyStateStyle}"
+                 Visibility="{Binding IsListEmpty, Converter={StaticResource BoolToVis}}" />
+    </Grid>
+  </DockPanel>
+</UserControl>
